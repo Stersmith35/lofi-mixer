@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lo-Fi Video Mixer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Lo-Fi Video + Spotify Mixer</h1>
+
+    <div class="selector-container">
+        <div class="selector">
+            <label for="videoSelect">Choose Video:</label>
+            <select id="videoSelect"></select>
+            <button id="addVideoBtn">+ Add Video</button>
+            <button id="deleteVideoBtn">🗑️ Delete Video</button>
+        </div>
+
+        <div class="selector">
+            <label for="spotifySelect">Choose Playlist:</label>
+            <select id="spotifySelect"></select>
+            <button id="addPlaylistBtn">+ Add Playlist</button>
+            <button id="deletePlaylistBtn">🗑️ Delete Playlist</button>
+        </div>
+    </div>
+
+    <div class="player-container">
+        <iframe id="youtubePlayer" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        <iframe id="spotifyPlayer" width="300" height="380" frameborder="0" allow="encrypted-media"></iframe>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
