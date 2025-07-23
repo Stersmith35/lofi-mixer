@@ -5,7 +5,7 @@ body {
     color: #ffffff;
     margin: 0;
     padding: 0;
-    background-image: url(./img/background.png);
+    background-image: url(background.png);
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
@@ -76,7 +76,7 @@ h1 {
     cursor: pointer;
     position: relative;
     transition: transform 0.2s;
-    color: #000000;
+    color: #0ce9e9;
 }
 
 .card:hover {
@@ -103,12 +103,13 @@ h1 {
 .add-btn {
     margin-top: 10px;
     padding: 8px 16px;
-    background-color: #3e5d7e;
+    background-color: #0c2744;
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
+    box-shadow: 4px 4px 5px black
 }
 
 .add-btn:hover {
