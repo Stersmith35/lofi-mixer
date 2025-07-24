@@ -1,12 +1,10 @@
-const videoSelect = document.getElementById("videoSelect");
-const spotifySelect = document.getElementById("spotifySelect");
+const videoGrid = document.getElementById("videoGrid");
+const playlistGrid = document.getElementById("playlistGrid");
 const youtubePlayer = document.getElementById("youtubePlayer");
 const spotifyPlayer = document.getElementById("spotifyPlayer");
 
 const addVideoBtn = document.getElementById("addVideoBtn");
-const deleteVideoBtn = document.getElementById("deleteVideoBtn");
 const addPlaylistBtn = document.getElementById("addPlaylistBtn");
-const deletePlaylistBtn = document.getElementById("deletePlaylistBtn");
 
 // Default lists
 let videos = [
@@ -36,27 +34,54 @@ function saveData() {
     localStorage.setItem("playlists", JSON.stringify(playlists));
 }
 
-// Populate dropdown menus
-function populateDropdowns() {
-    videoSelect.innerHTML = "";
-    spotifySelect.innerHTML = "";
+// Render cards
+function renderCards() {
+    videoGrid.innerHTML = "";
+    playlistGrid.innerHTML = "";
 
-    videos.forEach(video => {
-        const option = document.createElement("option");
-        option.textContent = video.name;
-        option.value = video.url;
-        videoSelect.appendChild(option);
+    videos.forEach((video, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <button class="delete-btn" onclick="deleteVideo(${index})">x</button>
+            <h3>${video.name}</h3>
+        `;
+        card.onclick = () => {
+            youtubePlayer.src = video.url;
+        };
+        videoGrid.appendChild(card);
     });
 
-    playlists.forEach(playlist => {
-        const option = document.createElement("option");
-        option.textContent = playlist.name;
-        option.value = playlist.url;
-        spotifySelect.appendChild(option);
+    playlists.forEach((playlist, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <button class="delete-btn" onclick="deletePlaylist(${index})">x</button>
+            <h3>${playlist.name}</h3>
+        `;
+        card.onclick = () => {
+            spotifyPlayer.src = playlist.url;
+        };
+        playlistGrid.appendChild(card);
     });
 }
 
-// Helper function to convert YouTube URL to embed format
+// Delete functions
+function deleteVideo(index) {
+    videos.splice(index, 1);
+    saveData();
+    renderCards();
+    youtubePlayer.src = videos[0] ? videos[0].url : "";
+}
+
+function deletePlaylist(index) {
+    playlists.splice(index, 1);
+    saveData();
+    renderCards();
+    spotifyPlayer.src = playlists[0] ? playlists[0].url : "";
+}
+
+// Helper functions
 function convertYouTubeURL(url) {
     const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
     const match = url.match(regex);
@@ -66,7 +91,6 @@ function convertYouTubeURL(url) {
     return null;
 }
 
-// Helper function to convert Spotify playlist URL to embed format
 function convertSpotifyURL(url) {
     const regex = /open\.spotify\.com\/playlist\/([a-zA-Z0-9]+)/;
     const match = url.match(regex);
@@ -86,22 +110,10 @@ addVideoBtn.addEventListener("click", () => {
     if (videoName && embedURL) {
         videos.push({ name: videoName, url: embedURL });
         saveData();
-        populateDropdowns();
-        videoSelect.value = embedURL;
+        renderCards();
         youtubePlayer.src = embedURL;
     } else {
         alert("Invalid YouTube link. Please try again.");
-    }
-});
-
-// Delete selected video
-deleteVideoBtn.addEventListener("click", () => {
-    const selectedIndex = videoSelect.selectedIndex;
-    if (selectedIndex !== -1) {
-        videos.splice(selectedIndex, 1);
-        saveData();
-        populateDropdowns();
-        youtubePlayer.src = videos[0] ? videos[0].url : "";
     }
 });
 
@@ -115,39 +127,17 @@ addPlaylistBtn.addEventListener("click", () => {
     if (playlistName && embedURL) {
         playlists.push({ name: playlistName, url: embedURL });
         saveData();
-        populateDropdowns();
-        spotifySelect.value = embedURL;
+        renderCards();
         spotifyPlayer.src = embedURL;
     } else {
         alert("Invalid Spotify playlist link. Please try again.");
     }
 });
 
-// Delete selected playlist
-deletePlaylistBtn.addEventListener("click", () => {
-    const selectedIndex = spotifySelect.selectedIndex;
-    if (selectedIndex !== -1) {
-        playlists.splice(selectedIndex, 1);
-        saveData();
-        populateDropdowns();
-        spotifyPlayer.src = playlists[0] ? playlists[0].url : "";
-    }
-});
-
-// Load and initialize
+// Initialize
 loadSavedData();
-populateDropdowns();
+renderCards();
 
 // Load default players
-youtubePlayer.src = videoSelect.value;
-spotifyPlayer.src = spotifySelect.value;
-
-// Change video when user selects new one
-videoSelect.addEventListener("change", () => {
-    youtubePlayer.src = videoSelect.value;
-});
-
-// Change playlist when user selects new one
-spotifySelect.addEventListener("change", () => {
-    spotifyPlayer.src = spotifySelect.value;
-});
+if (videos[0]) youtubePlayer.src = videos[0].url;
+if (playlists[0]) spotifyPlayer.src = playlists[0].url;
